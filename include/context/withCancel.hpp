@@ -17,8 +17,8 @@ namespace context {
         std::unique_ptr<CustomException> error;
         std::stop_source cancelToken;
         std::mutex errorLocker;
-
-        friend ContextFactory;
+    protected:
+        void cancelWithError(std::unique_ptr<CustomException>&& errorP);
     public:
         explicit WithCancel(std::shared_ptr<Context>&& parentP);
 

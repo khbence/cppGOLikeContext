@@ -1,7 +1,8 @@
-#include "createContext.hpp"
+#include "contextFactory.hpp"
 #include <iostream>
 #include <memory>
 #include <thread>
+#include <chrono>
 
 using namespace std::literals::chrono_literals;
 
@@ -18,9 +19,12 @@ void printingSlowly(const std::shared_ptr<context::Context>& ctx) {
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[]) {
-  auto ctx = context::ContextFactory::createWithCancelContext(context::ContextFactory::createBackgroundContext());
-  std::jthread th{printingSlowly, ctx};
-  std::this_thread::sleep_for(2500ms);
-  ctx->cancel();
-  return EXIT_SUCCESS;
+    auto ctx = context::ContextFactory::createWithCancelContext(context::ContextFactory::createBackgroundContext());
+    auto now = std::chrono::system_clock::now();
+    ctx = context::ContextFactory::createWithDeadlineContext(now + 2500ms, ctx);
+    std::jthread th{printingSlowly, ctx};
+    std::this_thread::sleep_for(3500ms);
+    ctx->cancel();
+    std::cout << ctx->err()->what() << std::endl;
+    return EXIT_SUCCESS;
 }

@@ -1,7 +1,8 @@
-#include "createContext.hpp"
+#include "contextFactory.hpp"
 #include "background.hpp"
 #include "todo.hpp"
 #include "withCancel.hpp"
+#include "withDeadline.hpp"
 
 namespace context {
 std::shared_ptr<Context> ContextFactory::createBackgroundContext() {
@@ -14,5 +15,9 @@ std::shared_ptr<Context> ContextFactory::createTODOContext() {
 
 std::shared_ptr<Context> ContextFactory::createWithCancelContext(std::shared_ptr<Context> parent) {
     return std::make_shared<WithCancel>(std::move(parent));
+}
+
+std::shared_ptr<Context> ContextFactory::createWithDeadlineContext(time deadline, std::shared_ptr<Context> parent) {
+    return std::make_shared<WithDeadline>(deadline, std::move(parent));
 }
 } // namespace context
