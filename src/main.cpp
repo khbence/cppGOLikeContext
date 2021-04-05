@@ -20,10 +20,10 @@ void printingSlowly(const std::shared_ptr<context::Context>& ctx) {
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[]) {
     auto ctx = context::ContextFactory::createWithCancelContext(context::ContextFactory::createBackgroundContext());
-    auto now = std::chrono::system_clock::now();
-    ctx = context::ContextFactory::createWithDeadlineContext(now + 2500ms, ctx);
+    [[maybe_unused]] auto now = std::chrono::system_clock::now();
+    ctx = context::ContextFactory::createWithTimeoutContext(2500ms, ctx);
     std::jthread th{printingSlowly, ctx};
-    std::this_thread::sleep_for(3500ms);
+    std::this_thread::sleep_for(1500ms);
     ctx->cancel();
     std::cout << ctx->err()->what() << std::endl;
     return EXIT_SUCCESS;

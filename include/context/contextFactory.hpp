@@ -8,7 +8,13 @@ namespace context {
         [[nodiscard]] static std::shared_ptr<Context> createBackgroundContext();
         [[nodiscard]] static std::shared_ptr<Context> createTODOContext();
         [[nodiscard]] static std::shared_ptr<Context> createWithCancelContext(std::shared_ptr<Context> parent);
+
+
         [[nodiscard]] static std::shared_ptr<Context> createWithDeadlineContext(time deadline, std::shared_ptr<Context> parent);
+        template<int64_t N>
+        [[nodiscard]] static std::shared_ptr<Context> createWithTimeoutContext(std::chrono::duration<int64_t, std::ratio<1, N>> timeout, const std::shared_ptr<Context>& parent) {
+            return createWithDeadlineContext(std::chrono::system_clock::now() + timeout, parent);
+        }
     };
 
 }
