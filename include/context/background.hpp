@@ -6,8 +6,8 @@ namespace context {
         static std::any emptyAny;
     public:
         [[nodiscard]] std::optional<time> deadline() override;
-        [[nodiscard]] std::shared_ptr<channel> done() override;
-        [[nodiscard]] std::unique_ptr<std::exception> err() override;
+        [[nodiscard]] doneSignal done() override;
+        [[nodiscard]] std::exception* err() override;
         [[nodiscard]] const std::any& value(const std::any& key) override;
     };
 }

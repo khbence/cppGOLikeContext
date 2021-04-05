@@ -1,21 +1,15 @@
 #include "background.hpp"
 
 namespace context {
-    std::any Background::emptyAny;
+std::any Background::emptyAny;
 
-    std::optional<time> Background::deadline() {
-        return std::optional<time>();
-    }
+std::optional<time> Background::deadline() { return std::optional<time>(); }
 
-    std::shared_ptr<channel> Background::done() {
-        return nullptr;
-    }
+doneSignal Background::done() { return {}; }
 
-    std::unique_ptr<std::exception> Background::err() {
-        return nullptr;
-    }
+std::exception *Background::err() { return nullptr; }
 
-    const std::any& Background::value([[maybe_unused]] const std::any &key) {
-        return Background::emptyAny;
-    }
+const std::any &Background::value([[maybe_unused]] const std::any &key) {
+  return Background::emptyAny;
 }
+} // namespace context

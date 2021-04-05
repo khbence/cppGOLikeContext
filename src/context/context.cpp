@@ -1,4 +1,6 @@
-#include <iostream>
 #include "context.hpp"
 
-void printHello() { std::cout << "Hello World!\n"; }
+namespace context {
+Context::Context(std::shared_ptr<Context> ctx) : parent(std::move(ctx)) {}
+}
+
