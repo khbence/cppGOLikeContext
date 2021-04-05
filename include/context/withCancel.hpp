@@ -5,6 +5,7 @@
 #include <thread>
 #include <functional>
 #include <mutex>
+class ContextFactory;
 
 namespace context {
     class Canceled : public CustomException {
@@ -17,7 +18,7 @@ namespace context {
         std::stop_source cancelToken;
         std::mutex errorLocker;
 
-        friend std::pair<std::shared_ptr<Context>, std::function<void()>> createWithCancelContext(std::shared_ptr<Context>&& ctx);
+        friend ContextFactory;
     public:
         explicit WithCancel(std::shared_ptr<Context>&& parentP);
 
@@ -25,5 +26,6 @@ namespace context {
         [[nodiscard]] doneSignal done() override;
         [[nodiscard]] std::exception* err() override;
         [[nodiscard]] const std::any& value(const std::any& key) override;
+        void cancel() override;
     };
 }

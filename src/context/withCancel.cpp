@@ -21,4 +21,17 @@ std::exception* WithCancel::err() {
 const std::any& WithCancel::value(const std::any& key) {
     return parent->value(key);
 }
+
+
+void WithCancel::cancel() {
+    std::lock_guard<std::mutex> locker{errorLocker};
+    if(cancelToken.stop_requested()) {
+        return;
+    }
+    cancelToken.request_stop();
+    error = std::make_unique<Canceled>();
+    if(parent != nullptr) {
+        parent->cancel();
+    }
+}
 } // namespace context

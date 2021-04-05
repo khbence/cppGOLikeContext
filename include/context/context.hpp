@@ -14,7 +14,7 @@ namespace context {
     protected:
         std::shared_ptr<Context> parent;
         Context() = default;
-        Context(std::shared_ptr<Context> ctx);
+        explicit Context(std::shared_ptr<Context> ctx);
     public:
         virtual ~Context() = default;
 
@@ -22,5 +22,6 @@ namespace context {
         [[nodiscard]] virtual doneSignal done() = 0;
         [[nodiscard]] virtual std::exception* err() = 0;
         [[nodiscard]] virtual const std::any& value(const std::any& key) = 0;
+        virtual void cancel();
     };
 }

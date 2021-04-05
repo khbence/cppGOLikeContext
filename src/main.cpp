@@ -5,7 +5,7 @@
 
 using namespace std::literals::chrono_literals;
 
-void printingSlowly(std::shared_ptr<context::Context> ctx) {
+void printingSlowly(const std::shared_ptr<context::Context>& ctx) {
     constexpr unsigned steps = 10;
     auto done = ctx->done();
     for(unsigned i = 0; i < steps; ++i) {
@@ -18,9 +18,9 @@ void printingSlowly(std::shared_ptr<context::Context> ctx) {
 }
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[]) {
-  auto [ctx, cancel] = context::createWithCancelContext(context::createBackgroundContext());
+  auto ctx = context::ContextFactory::createWithCancelContext(context::ContextFactory::createBackgroundContext());
   std::jthread th{printingSlowly, ctx};
   std::this_thread::sleep_for(2500ms);
-  cancel();
+  ctx->cancel();
   return EXIT_SUCCESS;
 }
