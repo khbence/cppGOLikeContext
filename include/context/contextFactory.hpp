@@ -8,7 +8,7 @@ namespace context {
         [[nodiscard]] static std::shared_ptr<Context> createBackgroundContext();
         [[nodiscard]] static std::shared_ptr<Context> createTODOContext();
         [[nodiscard]] static std::shared_ptr<Context> createWithCancelContext(std::shared_ptr<Context> parent);
-
+        [[nodiscard]] static std::shared_ptr<Context> createWithValueContext(std::any&& key, std::any&& value, std::shared_ptr<Context> parent);
 
         [[nodiscard]] static std::shared_ptr<Context> createWithDeadlineContext(time deadline, std::shared_ptr<Context> parent);
         template<int64_t N>

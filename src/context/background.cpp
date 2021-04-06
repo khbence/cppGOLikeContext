@@ -3,7 +3,7 @@
 namespace context {
 std::any Background::emptyAny;
 
-Background::Background(std::shared_ptr<Context>&& parent) : Context(std::move(parent)) {}
+Background::Background(std::shared_ptr<Context>&& parentP) : Context(std::move(parentP)) {}
 
 std::optional<time> Background::deadline() {
     if(parent == nullptr) {

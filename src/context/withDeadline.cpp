@@ -13,9 +13,9 @@ WithDeadline::WithDeadline(time deadlineP, std::shared_ptr<Context>&& parentP)
             cancelWithError(std::make_unique<Canceled>());
         } else {
             cancelWithError(std::make_unique<DeadlineExceeded>());
+            canceledTheWait.store(false);
+            cv.notify_all();
         }
-        canceledTheWait.store(false);
-        cv.notify_all();
     }};
     th.detach();
 }
@@ -25,6 +25,9 @@ std::optional<time> WithDeadline::deadline() {
 }
 
 void WithDeadline::cancel() {
+    if(err() != nullptr) {
+        return;
+    }
     canceledTheWait.store(true);
     cv.notify_all();
     std::unique_lock<std::mutex> ul{waitMutex};
