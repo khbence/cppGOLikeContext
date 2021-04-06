@@ -11,10 +11,10 @@ WithDeadline::WithDeadline(time deadlineP, std::shared_ptr<Context>&& parentP)
         std::unique_lock<std::mutex> ul{waitMutex};
         if(cv.wait_until(ul, deadlineVar, [this](){return canceledTheWait.load();})) {
             cancelWithError(std::make_unique<Canceled>());
-        } else {
-            cancelWithError(std::make_unique<DeadlineExceeded>());
             canceledTheWait.store(false);
             cv.notify_all();
+        } else {
+            cancelWithError(std::make_unique<DeadlineExceeded>());
         }
     }};
     th.detach();

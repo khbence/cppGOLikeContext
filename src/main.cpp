@@ -18,7 +18,7 @@ void printingSlowly(const std::shared_ptr<context::Context>& ctx) {
         const auto& rawValue = ctx->value(static_cast<int>(i));
         if(rawValue.has_value()) {
             try {
-                value = std::any_cast<std::string>(rawValue);
+                value = std::any_cast<const char*>(rawValue);
             } catch (const std::bad_any_cast& e) {
                 value = e.what();
             }
@@ -36,7 +36,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[]) {
     ctx = context::ContextFactory::createWithValueContext(3, "three", ctx);
     ctx = context::ContextFactory::createWithValueContext(4, 4, ctx);
     std::jthread th{printingSlowly, ctx};
-    std::this_thread::sleep_for(4500ms);
+    std::this_thread::sleep_for(6500ms);
     ctx->cancel();
     std::cout << ctx->err()->what() << std::endl;
     return EXIT_SUCCESS;
