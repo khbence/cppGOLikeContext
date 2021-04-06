@@ -13,7 +13,7 @@ namespace context {
         Canceled();
     };
 
-    class WithCancel : public Context {
+    class WithCancel : public Background {
         std::unique_ptr<CustomException> error;
         std::stop_source cancelToken;
         std::mutex errorLocker;
@@ -22,10 +22,8 @@ namespace context {
     public:
         explicit WithCancel(std::shared_ptr<Context>&& parentP);
 
-        [[nodiscard]] std::optional<time> deadline() override;
         [[nodiscard]] doneSignal done() override;
         [[nodiscard]] std::exception* err() override;
-        [[nodiscard]] const std::any& value(const std::any& key) override;
         void cancel() override;
     };
 }

@@ -15,11 +15,7 @@ void WithCancel::cancelWithError(std::unique_ptr<CustomException>&& errorP) {
     }
 }
 
-WithCancel::WithCancel(std::shared_ptr<Context>&& parentP) : Context(std::move(parentP)) {}
-
-std::optional<time> WithCancel::deadline() {
-    return parent->deadline();
-}
+WithCancel::WithCancel(std::shared_ptr<Context>&& parentP) : Background(std::move(parentP)) {}
 
 doneSignal WithCancel::done() {
     return cancelToken.get_token();
@@ -29,11 +25,6 @@ std::exception* WithCancel::err() {
     std::lock_guard<std::mutex> guard{errorLocker};
     return error.get();
 }
-
-const std::any& WithCancel::value(const std::any& key) {
-    return parent->value(key);
-}
-
 
 void WithCancel::cancel() {
     cancelWithError(std::make_unique<Canceled>());
