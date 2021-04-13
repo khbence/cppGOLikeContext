@@ -72,7 +72,7 @@ endif()
 
 add_library(${SRC_LIBRARY})
 add_library(${SRC_LIBRARY}::${SRC_LIBRARY} ALIAS ${SRC_LIBRARY})
-target_link_libraries(${SRC_LIBRARY} PUBLIC project_options project_warnings)
+target_link_libraries(${SRC_LIBRARY} PRIVATE project_options project_warnings)
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
