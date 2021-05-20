@@ -71,12 +71,11 @@ if(ENABLE_UNITY)
 endif()
 
 add_library(${SRC_LIBRARY})
-target_link_libraries(${SRC_LIBRARY} PUBLIC project_options project_warnings)
 
-set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(${SRC_LIBRARY} PRIVATE Threads::Threads)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
 
+target_link_libraries(${SRC_LIBRARY} PRIVATE project_options project_warnings Threads::Threads)
 include(src/CMakeLists.txt)
 
 if(ENABLE_TESTING)
