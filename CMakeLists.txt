@@ -9,8 +9,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SRC_LIBRARY "contextLibrary")
-set(MAIN_BINARY "context")
+set(SRC_LIBRARY "context")
+set(MAIN_BINARY "contextMain")
 set(TEST_BINARY "testContext")
 
 # Link this 'library' to set the c++ standard / compile-time options requested
@@ -71,6 +71,8 @@ if(ENABLE_UNITY)
 endif()
 
 add_library(${SRC_LIBRARY})
+add_library(${SRC_LIBRARY}::${SRC_LIBRARY} ALIAS ${SRC_LIBRARY})
+target_link_libraries(${SRC_LIBRARY} PRIVATE project_options project_warnings)
 
 find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
