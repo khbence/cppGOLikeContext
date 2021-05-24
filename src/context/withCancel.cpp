@@ -18,7 +18,7 @@ void WithCancel::cancelWithError(std::unique_ptr<CustomException>&& errorP) {
 WithCancel::WithCancel(std::shared_ptr<Context>&& parentP) : Background(std::move(parentP)) {}
 
 doneSignal WithCancel::done() {
-    return cancelToken.get_token();
+    return Token{std::move(cancelToken.get_token())};
 }
 
 std::exception* WithCancel::err() {

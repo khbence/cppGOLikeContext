@@ -11,7 +11,7 @@ void printingSlowly(const std::shared_ptr<context::Context>& ctx) {
     constexpr unsigned steps = 10;
     auto done = ctx->done();
     for(unsigned i = 0; i < steps; ++i) {
-        if(done->stop_requested()) {
+        if(done()) {
             break;
         }
         std::string value = "no value";
