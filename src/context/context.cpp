@@ -8,7 +8,7 @@ bool Token::operator()() const {
     if(!signal) {
         return false;
     }
-    if(signal->stop_possible()) {
+    if(!signal->stop_possible()) {
         return false;
     }
     return signal->stop_requested();

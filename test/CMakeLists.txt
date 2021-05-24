@@ -17,7 +17,7 @@ target_sources(${TEST_BINARY} PRIVATE ${CMAKE_CURRENT_LIST_DIR}/main.cpp)
 include(${CMAKE_CURRENT_LIST_DIR}/context/CMakeLists.txt)
 include(${CMAKE_CURRENT_LIST_DIR}/utils/CMakeLists.txt)
 
-target_link_libraries(${TEST_BINARY} gtest gtest_main)
+target_link_libraries(${TEST_BINARY} gtest gtest_main ${SRC_LIBRARY})
 
 enable_testing()
 
