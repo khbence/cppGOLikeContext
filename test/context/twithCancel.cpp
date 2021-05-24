@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include "contextFactory.hpp"
 #include <array>
-#include "iostream"
+#include <string>
 
 auto createWithCancel() {
     return context::ContextFactory::createWithCancelContext(context::ContextFactory::createBackgroundContext());
@@ -31,14 +31,14 @@ TEST(withCancel, cancelPropagation) {
     }
     constexpr unsigned C = 2;
     contexts[C]->cancel();
-    for(auto& c : contexts) {
-        std::cout << c->done() << ", ";
-    }
-    std::cout << std::endl;
     for(unsigned i = 0; i < C; ++i) {
         EXPECT_FALSE(contexts[i]->done());
+        EXPECT_FALSE(contexts[i]->err());
     }
     for(unsigned i = C; i < N; ++i) {
         EXPECT_TRUE(contexts[i]->done());
+        auto* err = contexts[i]->err();
+        ASSERT_TRUE(err);
+        EXPECT_EQ(std::string{err->what()}, "context cancelled");
     }
 }

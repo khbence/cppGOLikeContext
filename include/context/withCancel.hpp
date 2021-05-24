@@ -9,14 +9,14 @@
 class ContextFactory;
 
 namespace context {
-    class Canceled : public CustomException {
+    class Cancelled : public CustomException {
     public:
-        Canceled();
+        Cancelled();
     };
 
     class WithCancel : public Background {
         std::unique_ptr<CustomException> error;
-        std::atomic_bool isCanceled;
+        std::atomic_bool isCancelled;
         std::mutex errorLocker;
     protected:
         void cancelWithError(std::unique_ptr<CustomException>&& errorP);

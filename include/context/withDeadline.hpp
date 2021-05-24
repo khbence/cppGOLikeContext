@@ -12,7 +12,7 @@ public:
 
 class WithDeadline : public WithCancel {
     time deadlineVar;
-    std::atomic<bool> canceledTheWait = false;
+    std::atomic<bool> cancelledTheWait = false;
     std::mutex waitMutex;
     std::condition_variable cv;
 public:
