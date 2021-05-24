@@ -5,6 +5,7 @@
 #include <thread>
 #include <functional>
 #include <mutex>
+#include <atomic>
 class ContextFactory;
 
 namespace context {
@@ -15,7 +16,7 @@ namespace context {
 
     class WithCancel : public Background {
         std::unique_ptr<CustomException> error;
-        std::stop_source cancelToken;
+        std::atomic_bool isCanceled;
         std::mutex errorLocker;
     protected:
         void cancelWithError(std::unique_ptr<CustomException>&& errorP);

@@ -5,20 +5,17 @@ Canceled::Canceled() : CustomException("context canceled") {}
 
 void WithCancel::cancelWithError(std::unique_ptr<CustomException>&& errorP) {
     std::lock_guard<std::mutex> locker{errorLocker};
-    if(cancelToken.stop_requested()) {
+    if(isCanceled.load()) {
         return;
     }
-    cancelToken.request_stop();
+    isCanceled.store(true);
     error = std::move(errorP);
-    if(parent != nullptr) {
-        parent->cancel();
-    }
 }
 
 WithCancel::WithCancel(std::shared_ptr<Context>&& parentP) : Background(std::move(parentP)) {}
 
 doneSignal WithCancel::done() {
-    return Token{std::move(cancelToken.get_token())};
+    return isCanceled.load() || parent->done();
 }
 
 std::exception* WithCancel::err() {

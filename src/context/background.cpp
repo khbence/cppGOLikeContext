@@ -14,7 +14,7 @@ std::optional<time> Background::deadline() {
 
 doneSignal Background::done() {
     if(parent == nullptr) {
-        return {};
+        return false;
     }
     return parent->done();
 }

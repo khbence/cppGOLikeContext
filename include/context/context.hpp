@@ -17,7 +17,7 @@ namespace context {
 
     // TODO create some actual useful type for it
     typedef std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> time;
-    typedef Token doneSignal;
+    typedef bool doneSignal;
 
     class Context {
     protected:

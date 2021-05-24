@@ -9,9 +9,8 @@ using namespace std::literals::chrono_literals;
 
 void printingSlowly(const std::shared_ptr<context::Context>& ctx) {
     constexpr unsigned steps = 10;
-    auto done = ctx->done();
     for(unsigned i = 0; i < steps; ++i) {
-        if(done()) {
+        if(ctx->done()) {
             break;
         }
         std::string value = "no value";
