@@ -23,7 +23,7 @@ namespace context {
     public:
         explicit WithCancel(std::shared_ptr<Context>&& parentP);
 
-        [[nodiscard]] doneSignal done() override;
+        [[nodiscard]] bool done() override;
         [[nodiscard]] std::optional<std::string> err() override;
         void cancel() override;
     };

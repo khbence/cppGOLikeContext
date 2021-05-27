@@ -9,7 +9,7 @@ namespace context {
     public:
         Background() = default;
         [[nodiscard]] std::optional<time> deadline() override;
-        [[nodiscard]] doneSignal done() override;
+        [[nodiscard]] bool done() override;
         [[nodiscard]] std::optional<std::string> err() override;
         [[nodiscard]] const std::any& value(const std::any& key) override;
     };

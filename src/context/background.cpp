@@ -12,7 +12,7 @@ std::optional<time> Background::deadline() {
     return parent->deadline();
 }
 
-doneSignal Background::done() {
+bool Background::done() {
     if(parent == nullptr) {
         return false;
     }
