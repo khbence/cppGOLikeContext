@@ -19,9 +19,9 @@ doneSignal Background::done() {
     return parent->done();
 }
 
-std::exception *Background::err() {
+std::optional<std::string> Background::err() {
     if(parent == nullptr) {
-        return nullptr;
+        return {};
     }
     return parent->err();
 }

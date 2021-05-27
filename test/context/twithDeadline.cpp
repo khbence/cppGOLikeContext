@@ -21,9 +21,9 @@ TEST(deadline, allFunctionDefault) {
     EXPECT_FALSE(ctx->value("text").has_value());
     std::this_thread::sleep_until(deadline + 0.5s);
     EXPECT_TRUE(ctx->done());
-    auto* err = ctx->err();
+    auto err = ctx->err();
     ASSERT_TRUE(err);
-    EXPECT_EQ(std::string{err->what()}, "deadline exceeded");
+    EXPECT_EQ(err.value(), "deadline exceeded");
 }
 
 TEST(deadline, parentCancelled) {
@@ -32,13 +32,13 @@ TEST(deadline, parentCancelled) {
     auto ctx = context::ContextFactory::createWithDeadlineContext(deadline, parent);
     parent->cancel();
     EXPECT_TRUE(ctx->done());
-    auto* err = ctx->err();
+    auto err = ctx->err();
     ASSERT_TRUE(err);
-    EXPECT_EQ(std::string{err->what()}, "context cancelled");
+    EXPECT_EQ(err.value(), "context cancelled");
     std::this_thread::sleep_until(deadline + 0.5s);
     err = ctx->err();
     ASSERT_TRUE(err);
-    EXPECT_EQ(std::string{err->what()}, "context cancelled");
+    EXPECT_EQ(err.value(), "context cancelled");
 }
 
 TEST(deadline, child) {
@@ -47,7 +47,7 @@ TEST(deadline, child) {
     auto child = context::ContextFactory::createWithCancelContext(ctx);
     std::this_thread::sleep_until(deadline + 0.5s);
     EXPECT_TRUE(child->done());
-    auto* err = child->err();
+    auto err = child->err();
     ASSERT_TRUE(err);
-    EXPECT_EQ(std::string{err->what()}, "deadline exceeded");
+    EXPECT_EQ(err.value(), "deadline exceeded");
 }

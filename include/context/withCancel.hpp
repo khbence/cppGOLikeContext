@@ -24,7 +24,7 @@ namespace context {
         explicit WithCancel(std::shared_ptr<Context>&& parentP);
 
         [[nodiscard]] doneSignal done() override;
-        [[nodiscard]] std::exception* err() override;
+        [[nodiscard]] std::optional<std::string> err() override;
         void cancel() override;
     };
 }

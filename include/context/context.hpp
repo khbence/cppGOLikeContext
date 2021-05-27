@@ -29,7 +29,7 @@ namespace context {
 
         [[nodiscard]] virtual std::optional<time> deadline() = 0;
         [[nodiscard]] virtual doneSignal done() = 0;
-        [[nodiscard]] virtual std::exception* err() = 0;
+        [[nodiscard]] virtual std::optional<std::string> err() = 0;
         [[nodiscard]] virtual const std::any& value(const std::any& key) = 0;
         virtual void cancel();
     };

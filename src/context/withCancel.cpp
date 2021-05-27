@@ -21,11 +21,11 @@ doneSignal WithCancel::done() {
     return isCancelled.load();
 }
 
-std::exception* WithCancel::err() {
+std::optional<std::string> WithCancel::err() {
     {
         std::lock_guard<std::mutex> guard{errorLocker};
         if(error) {
-            return error.get();
+            return error->what();
         }
     }
     if(parent) {

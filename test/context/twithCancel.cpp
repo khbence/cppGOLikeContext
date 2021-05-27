@@ -37,8 +37,8 @@ TEST(withCancel, cancelPropagation) {
     }
     for(unsigned i = C; i < N; ++i) {
         EXPECT_TRUE(contexts[i]->done());
-        auto* err = contexts[i]->err();
+        auto err = contexts[i]->err();
         ASSERT_TRUE(err);
-        EXPECT_EQ(std::string{err->what()}, "context cancelled");
+        EXPECT_EQ(err.value(), "context cancelled");
     }
 }

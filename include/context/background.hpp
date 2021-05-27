@@ -10,7 +10,7 @@ namespace context {
         Background() = default;
         [[nodiscard]] std::optional<time> deadline() override;
         [[nodiscard]] doneSignal done() override;
-        [[nodiscard]] std::exception* err() override;
+        [[nodiscard]] std::optional<std::string> err() override;
         [[nodiscard]] const std::any& value(const std::any& key) override;
     };
 }

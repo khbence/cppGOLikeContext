@@ -6,8 +6,8 @@ DeadlineExceeded::DeadlineExceeded() : CustomException("deadline exceeded") {}
 
 WithDeadline::WithDeadline(time deadlineP, std::shared_ptr<Context>&& parentP)
                 : WithCancel(std::move(parentP))
-                , deadlineVar(deadlineP) {
-    std::thread th{[this](){
+                , deadlineVar(deadlineP)
+                , waitingThread{[this](){
         std::unique_lock<std::mutex> ul{waitMutex};
         if(cv.wait_until(ul, deadlineVar, [this](){
             return cancelledTheWait.load() || parent->done();
@@ -16,11 +16,9 @@ WithDeadline::WithDeadline(time deadlineP, std::shared_ptr<Context>&& parentP)
         } else {
             cancelWithError(std::make_unique<DeadlineExceeded>());
         }
-        cancelledTheWait.store(false);
+        finishedTheCancellation.store(true);
         cv.notify_all();
-    }};
-    th.detach();
-}
+    }} {}
 
 WithDeadline::~WithDeadline() {
     cancel();
@@ -31,12 +29,12 @@ std::optional<time> WithDeadline::deadline() {
 }
 
 void WithDeadline::cancel() {
-    if(err() != nullptr) {
+    if(err()) {
         return;
     }
     cancelledTheWait.store(true);
     cv.notify_all();
     std::unique_lock<std::mutex> ul{waitMutex};
-    cv.wait(ul, [this]() { return !cancelledTheWait.load();});
+    cv.wait(ul, [this]() { return finishedTheCancellation.load();});
 }
 }

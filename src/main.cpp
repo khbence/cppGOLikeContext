@@ -37,6 +37,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[]) {
     std::jthread th{printingSlowly, ctx};
     std::this_thread::sleep_for(6500ms);
     ctx->cancel();
-    std::cout << ctx->err()->what() << std::endl;
+    std::cout << ctx->err().value_or("No error") << std::endl;
     return EXIT_SUCCESS;
 }
