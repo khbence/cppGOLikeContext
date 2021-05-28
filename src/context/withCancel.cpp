@@ -25,7 +25,7 @@ std::optional<std::string> WithCancel::err() {
     {
         std::lock_guard<std::mutex> guard{errorLocker};
         if(error) {
-            return error->what();
+            return std::string(error->what());
         }
     }
     if(parent) {
