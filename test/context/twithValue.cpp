@@ -22,6 +22,10 @@ TEST(withValue, allFunctionDefault) {
     EXPECT_EQ(std::any_cast<int>(val), 2);
 }
 
+TEST(withValue, emptyKey) {
+    EXPECT_THROW(auto ctx = context::ContextFactory::createWithValueContext(std::any{}, 2, context::ContextFactory::createBackgroundContext()), context::EmptyKeyException);
+}
+
 template<typename V>
 void checkValue(const std::any& refValue, const std::any& val) {
     ASSERT_TRUE(val.has_value());

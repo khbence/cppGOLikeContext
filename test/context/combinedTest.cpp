@@ -68,6 +68,12 @@ protected:
         }
     }
 
+    void TearDown() {
+        for(auto& t : threads) {
+            t.join();
+        }
+    }
+
     void checkAllValues() {
         auto val = contexts.back()->value(std::get<0>(v1));
         ASSERT_TRUE(val.has_value());

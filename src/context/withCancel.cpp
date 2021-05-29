@@ -3,7 +3,7 @@
 namespace context {
 Cancelled::Cancelled() : CustomException("context cancelled") {}
 
-void WithCancel::cancelWithError(std::unique_ptr<CustomException>&& errorP) {
+void WithCancel::cancelWithError(std::unique_ptr<CustomException> errorP) {
     std::lock_guard<std::mutex> locker{errorLocker};
     if(isCancelled.load()) {
         return;
@@ -12,16 +12,16 @@ void WithCancel::cancelWithError(std::unique_ptr<CustomException>&& errorP) {
     error = std::move(errorP);
 }
 
-WithCancel::WithCancel(std::shared_ptr<Context>&& parentP) : Background(std::move(parentP)) {}
+WithCancel::WithCancel(std::shared_ptr<Context> parentP) : Background(std::move(parentP)) {}
 
-bool WithCancel::done() {
+bool WithCancel::done() const {
     if(parent) {
         return isCancelled.load() || parent->done();
     }
     return isCancelled.load();
 }
 
-std::optional<std::string> WithCancel::err() {
+std::optional<std::string> WithCancel::err() const {
     {
         std::lock_guard<std::mutex> guard{errorLocker};
         if(error) {

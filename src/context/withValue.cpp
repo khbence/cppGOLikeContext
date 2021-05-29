@@ -3,7 +3,7 @@
 namespace context {
     EmptyKeyException::EmptyKeyException() : CustomException("empty key for WithValue initialisation is not allowed") {}
 
-    WithValue::WithValue(std::any&& keyP, std::any&& valueP, std::shared_ptr<Context>&& parentP)
+    WithValue::WithValue(std::any keyP, std::any valueP, std::shared_ptr<Context> parentP)
                             : Background(std::move(parentP))
                             , keyVar(std::move(keyP))
                             , valueVar(std::move(valueP)) {
@@ -12,7 +12,7 @@ namespace context {
         }
     }
 
-    const std::any& WithValue::value(const std::any& key) {
+    const std::any& WithValue::value(const std::any& key) const {
         if(key.type() == keyVar.type()) {
             const auto& type = key.type();
             if(type == typeid(int)) {

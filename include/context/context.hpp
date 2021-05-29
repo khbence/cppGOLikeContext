@@ -16,10 +16,10 @@ namespace context {
     public:
         virtual ~Context() = default;
 
-        [[nodiscard]] virtual std::optional<time> deadline() = 0;
-        [[nodiscard]] virtual bool done() = 0;
-        [[nodiscard]] virtual std::optional<std::string> err() = 0;
-        [[nodiscard]] virtual const std::any& value(const std::any& key) = 0;
+        [[nodiscard]] virtual std::optional<time> deadline() const = 0;
+        [[nodiscard]] virtual bool done() const = 0;
+        [[nodiscard]] virtual std::optional<std::string> err() const = 0;
+        [[nodiscard]] virtual const std::any& value(const std::any& key) const = 0;
         virtual void cancel();
     };
 }

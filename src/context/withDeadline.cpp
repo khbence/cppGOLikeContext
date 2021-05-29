@@ -4,7 +4,7 @@
 namespace context{
 DeadlineExceeded::DeadlineExceeded() : CustomException("deadline exceeded") {}
 
-WithDeadline::WithDeadline(time deadlineP, std::shared_ptr<Context>&& parentP)
+WithDeadline::WithDeadline(time deadlineP, std::shared_ptr<Context> parentP)
                 : WithCancel(std::move(parentP))
                 , deadlineVar(deadlineP)
                 , waitingThread{[this](){
@@ -24,7 +24,7 @@ WithDeadline::~WithDeadline() {
     cancel();
 }
 
-std::optional<time> WithDeadline::deadline() {
+std::optional<time> WithDeadline::deadline() const {
     return deadlineVar;
 }
 

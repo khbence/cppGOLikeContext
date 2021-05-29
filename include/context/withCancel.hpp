@@ -17,14 +17,14 @@ namespace context {
     class WithCancel : public Background {
         std::unique_ptr<CustomException> error;
         std::atomic_bool isCancelled;
-        std::mutex errorLocker;
+        mutable std::mutex errorLocker;
     protected:
-        void cancelWithError(std::unique_ptr<CustomException>&& errorP);
+        void cancelWithError(std::unique_ptr<CustomException> errorP);
     public:
-        explicit WithCancel(std::shared_ptr<Context>&& parentP);
+        explicit WithCancel(std::shared_ptr<Context> parentP);
 
-        [[nodiscard]] bool done() override;
-        [[nodiscard]] std::optional<std::string> err() override;
+        [[nodiscard]] bool done() const override;
+        [[nodiscard]] std::optional<std::string> err() const override;
         void cancel() override;
     };
 }

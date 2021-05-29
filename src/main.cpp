@@ -22,7 +22,7 @@ void printingSlowly(const std::shared_ptr<context::Context>& ctx) {
                 value = e.what();
             }
         }
-        std::cout << "steps: " << i << " " << value << std::endl;
+        //std::cout << "steps: " << i << " " << value << std::endl;
         std::this_thread::sleep_for(1s);
     }
 }
@@ -37,6 +37,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char const *argv[]) {
     std::jthread th{printingSlowly, ctx};
     std::this_thread::sleep_for(6500ms);
     ctx->cancel();
-    std::cout << ctx->err().value_or("No error") << std::endl;
+    //std::cout << ctx->err().value_or("No error") << std::endl;
+    ctx->err().value_or("No error");
     return EXIT_SUCCESS;
 }

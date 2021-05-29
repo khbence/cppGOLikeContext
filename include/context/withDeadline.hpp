@@ -18,10 +18,10 @@ class WithDeadline : public WithCancel {
     std::condition_variable cv;
     std::jthread waitingThread;
 public:
-    explicit WithDeadline(time deadlineP, std::shared_ptr<Context>&& parentP);
+    explicit WithDeadline(time deadlineP, std::shared_ptr<Context> parentP);
     ~WithDeadline();
 
-    [[nodiscard]] std::optional<time> deadline() override;
+    [[nodiscard]] std::optional<time> deadline() const override;
     void cancel() override;
 };
 }
