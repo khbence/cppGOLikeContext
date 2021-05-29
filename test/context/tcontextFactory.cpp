@@ -20,14 +20,16 @@ TEST(factory, todo) {
 }
 
 TEST(factory, withCancel) {
-    auto ctx = context::ContextFactory::createWithCancelContext(context::ContextFactory::createBackgroundContext());
+    auto ctx = context::ContextFactory::createWithCancelContext(
+        context::ContextFactory::createBackgroundContext());
     EXPECT_TRUE(dynamic_cast<context::WithCancel*>(ctx.get()));
 }
 
 TEST(factory, withValue) {
     auto key = 1;
     auto value = 2;
-    auto ctx = context::ContextFactory::createWithValueContext(key, value, context::ContextFactory::createBackgroundContext());
+    auto ctx = context::ContextFactory::createWithValueContext(
+        key, value, context::ContextFactory::createBackgroundContext());
     auto retValue = ctx->value(5);
     EXPECT_FALSE(retValue.has_value());
     retValue = ctx->value(1);
@@ -39,7 +41,8 @@ TEST(factory, withValue) {
 
 TEST(factory, withDeadline) {
     auto deadline = std::chrono::system_clock::now() + 3s;
-    auto ctx = context::ContextFactory::createWithDeadlineContext(deadline, context::ContextFactory::createBackgroundContext());
+    auto ctx = context::ContextFactory::createWithDeadlineContext(
+        deadline, context::ContextFactory::createBackgroundContext());
     EXPECT_TRUE(dynamic_cast<context::WithDeadline*>(ctx.get()));
     ASSERT_TRUE(ctx->deadline().has_value());
     auto actual = ctx->deadline().value();
@@ -48,10 +51,10 @@ TEST(factory, withDeadline) {
 
 TEST(factory, withTimeout) {
     auto deadline = std::chrono::system_clock::now() + 3s;
-    auto ctx = context::ContextFactory::createWithTimeoutContext(3s, context::ContextFactory::createBackgroundContext());
+    auto ctx = context::ContextFactory::createWithTimeoutContext(
+        3s, context::ContextFactory::createBackgroundContext());
     EXPECT_TRUE(dynamic_cast<context::WithDeadline*>(ctx.get()));
     ASSERT_TRUE(ctx->deadline().has_value());
     auto actual = ctx->deadline().value();
     EXPECT_TRUE((deadline - 0.5s < actual) && (deadline + 0.5s > actual));
 }
-

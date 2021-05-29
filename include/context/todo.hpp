@@ -2,5 +2,5 @@
 #include "background.hpp"
 
 namespace context {
-    class TODO : public Background {};
-}
+class TODO : public Background {};
+}// namespace context

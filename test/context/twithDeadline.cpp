@@ -7,7 +7,8 @@
 using namespace std::literals::chrono_literals;
 
 auto createWithDeadline(auto deadline) {
-    return context::ContextFactory::createWithDeadlineContext(deadline, context::ContextFactory::createBackgroundContext());
+    return context::ContextFactory::createWithDeadlineContext(
+        deadline, context::ContextFactory::createBackgroundContext());
 }
 
 TEST(deadline, allFunctionDefault) {
@@ -28,7 +29,8 @@ TEST(deadline, allFunctionDefault) {
 
 TEST(deadline, parentCancelled) {
     auto deadline = std::chrono::system_clock::now() + 1s;
-    auto parent = context::ContextFactory::createWithCancelContext(context::ContextFactory::createBackgroundContext());
+    auto parent = context::ContextFactory::createWithCancelContext(
+        context::ContextFactory::createBackgroundContext());
     auto ctx = context::ContextFactory::createWithDeadlineContext(deadline, parent);
     parent->cancel();
     EXPECT_TRUE(ctx->done());
