@@ -12,9 +12,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SRC_LIBRARY "context")
 set(MAIN_BINARY "contextMain")
 set(TEST_BINARY "testContext")
+set(PWARNINGS, "project_warnings_${PROJECT_NAME}")
+set(POPTIONS, "project_options_${PROJECT_NAME}")
 
 # Link this 'library' to set the c++ standard / compile-time options requested
-add_library(project_options INTERFACE)
+add_library(project_options_${PROJECT_NAME} INTERFACE)
 # target_compile_features(project_options INTERFACE cxx_std_17)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
@@ -25,18 +27,18 @@ if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
 endif()
 
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
-add_library(project_warnings INTERFACE)
+add_library(PWARNINGS INTERFACE)
 
 # enable cache system
 include(cmake/Cache.cmake)
 
 # standard compiler warnings
 include(cmake/CompilerWarnings.cmake)
-set_project_warnings(project_warnings)
+set_project_warnings(PWARNINGS)
 
 # sanitizer options if supported by compiler
 include(cmake/Sanitizers.cmake)
-enable_sanitizers(project_options)
+enable_sanitizers(POPTIONS)
 
 # enable doxygen
 include(cmake/Doxygen.cmake)
@@ -55,7 +57,7 @@ if(ENABLE_PCH)
     # This sets a global PCH parameter, each project will build its own PCH, which is a good idea if any #define's change
     #
     # consider breaking this out per project as necessary
-    target_precompile_headers(project_options INTERFACE <iostream>)
+    target_precompile_headers(POPTIONS INTERFACE <iostream>)
 endif()
 
 if(ENABLE_FUZZING)
@@ -71,12 +73,11 @@ endif()
 
 add_library(${SRC_LIBRARY})
 add_library(${SRC_LIBRARY}::${SRC_LIBRARY} ALIAS ${SRC_LIBRARY})
-target_link_libraries(${SRC_LIBRARY} PRIVATE project_options project_warnings)
 
 find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
-target_link_libraries(${SRC_LIBRARY} PRIVATE project_options project_warnings Threads::Threads)
+target_link_libraries(${SRC_LIBRARY} PRIVATE ${POPTIONS} ${PWARNINGS} Threads::Threads)
 include(src/CMakeLists.txt)
 
 if(ENABLE_TESTING)

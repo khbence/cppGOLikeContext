@@ -87,7 +87,7 @@ protected:
     }
 
     void check(std::array<bool, N>& expectedDones,
-        std::array<std::optional<std::string>, N> expectedErrs) {
+        std::array<std::optional<std::string>, N>& expectedErrs) {
         errorMutex.lock();
         for (unsigned i = 0; i < N; ++i) {
             EXPECT_EQ(expectedDones.at(i), dones.at(i).load());
