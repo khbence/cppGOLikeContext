@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 # Set the project name to your project name, my project isn't very descriptive
-project(myproject CXX)
+project(context CXX)
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
 
@@ -27,7 +27,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
 endif()
 
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
-add_library(PWARNINGS INTERFACE)
+add_library(project_warnings_${PROJECT_NAME} INTERFACE)
 
 # enable cache system
 include(cmake/Cache.cmake)
