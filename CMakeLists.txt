@@ -37,8 +37,8 @@ include(cmake/CompilerWarnings.cmake)
 set_project_warnings(PWARNINGS)
 
 # sanitizer options if supported by compiler
-include(cmake/Sanitizers.cmake)
-enable_sanitizers(POPTIONS)
+# include(cmake/Sanitizers.cmake)
+# enable_sanitizers(POPTIONS)
 
 # enable doxygen
 include(cmake/Doxygen.cmake)
