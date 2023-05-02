@@ -2,3 +2,8 @@ cmake-build*
 build
 .idea
 .vscode
+MANIFEST.in
+*egg-info
+dist
+_skbuild
+*pyi

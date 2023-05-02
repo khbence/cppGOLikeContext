@@ -1,10 +1,31 @@
-FROM khbence/cppdevel
+FROM ubuntu:22.04
 
-RUN pacman -Sy --noconfirm gtest
+ENV DEBIAN_FRONTEND=noninteractive
+ENV SHELL=/bin/bash
 
-ARG USERNAME=vscode
-ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+RUN apt update -y && apt upgrade -y && apt install -y build-essential git cmake gdb valgrind autoconf libtool pkg-config cmake-curses-gui libgtest-dev
+ENV CXX=/usr/bin/g++
+ENV CC=/usr/bin/gcc
 
-RUN groupadd --gid $USER_GID $USERNAME
-RUN useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME
+WORKDIR /usr/src/googletest/googletest
+RUN mkdir build && \
+    cd build && \
+    cmake .. && \
+    make -j && \
+    cp lib/libgtest* /usr/lib/ && \
+    cd .. && \
+    rm -rf build
+
+RUN useradd -m -u 1000 nonroot
+
+RUN apt install -y python3 python3-pip python-is-python3
+RUN pip install mypy pylint pylint-exit pybind11-stubgen autopep8 scikit-build
+
+#this part is only necessary for publishing package to azure devops artifact
+RUN pip install twine keyring artifacts-keyring
+RUN apt install -y wget
+RUN wget https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
+    dpkg -i packages-microsoft-prod.deb && \
+    rm packages-microsoft-prod.deb && \
+    apt update -y && \
+    apt install -y dotnet-sdk-7.0

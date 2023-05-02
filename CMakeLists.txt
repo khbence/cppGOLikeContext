@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SRC_LIBRARY "context")
+set(SRC_LIBRARY "contextLib")
 set(MAIN_BINARY "contextMain")
 set(TEST_BINARY "testContext")
 set(PWARNINGS, "project_warnings_${PROJECT_NAME}")
@@ -27,7 +27,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
 endif()
 
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
-add_library(project_warnings_${PROJECT_NAME} INTERFACE)
+add_library(PWARNINGS INTERFACE)
 
 # enable cache system
 include(cmake/Cache.cmake)
@@ -37,8 +37,8 @@ include(cmake/CompilerWarnings.cmake)
 set_project_warnings(PWARNINGS)
 
 # sanitizer options if supported by compiler
-# include(cmake/Sanitizers.cmake)
-# enable_sanitizers(POPTIONS)
+include(cmake/Sanitizers.cmake)
+enable_sanitizers(POPTIONS)
 
 # enable doxygen
 include(cmake/Doxygen.cmake)
@@ -48,7 +48,7 @@ enable_doxygen()
 include(cmake/StaticAnalyzers.cmake)
 
 option(BUILD_SHARED_LIBS "Enable compilation of shared libraries" OFF)
-option(ENABLE_TESTING "Enable Test Builds" ON)
+option(ENABLE_TESTING "Enable Test Builds" OFF)
 option(ENABLE_FUZZING "Enable Fuzzing Builds" OFF)
 
 # Very basic PCH example
@@ -65,12 +65,6 @@ if(ENABLE_FUZZING)
     add_subdirectory(fuzz_test)
 endif()
 
-option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
-if(ENABLE_UNITY)
-    # Add for any project you want to apply unity builds for
-    set_target_properties(intro PROPERTIES UNITY_BUILD ON)
-endif()
-
 add_library(${SRC_LIBRARY})
 add_library(${SRC_LIBRARY}::${SRC_LIBRARY} ALIAS ${SRC_LIBRARY})
 
@@ -78,6 +72,19 @@ find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 target_link_libraries(${SRC_LIBRARY} PRIVATE ${POPTIONS} ${PWARNINGS} Threads::Threads)
+
+option(ENABLE_UNITY "Enable Unity builds of projects" OFF)
+if(ENABLE_UNITY)
+  # Add for any project you want to apply unity builds for
+  set_target_properties(${SRC_LIBRARY} PROPERTIES UNITY_BUILD ON)
+endif()
+
+option(ENABLE_LTO "Enable Link Time Optimization" OFF)
+if(ENABLE_LTO)
+  set_target_properties(${SRC_LIBRARY} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
+endif()
+
+option(BUILD_PY_MODULE "Build Python module" OFF)
 include(src/CMakeLists.txt)
 
 if(ENABLE_TESTING)
