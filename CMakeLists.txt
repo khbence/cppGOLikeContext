@@ -12,11 +12,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(SRC_LIBRARY "contextLib")
 set(MAIN_BINARY "contextMain")
 set(TEST_BINARY "testContext")
-set(PWARNINGS, "project_warnings_${PROJECT_NAME}")
-set(POPTIONS, "project_options_${PROJECT_NAME}")
+set(PWARNINGS "project_warnings_${PROJECT_NAME}")
+set(POPTIONS "project_options_${PROJECT_NAME}")
 
 # Link this 'library' to set the c++ standard / compile-time options requested
-add_library(project_options_${PROJECT_NAME} INTERFACE)
+add_library(${POPTIONS} INTERFACE)
 # target_compile_features(project_options INTERFACE cxx_std_17)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
@@ -27,18 +27,18 @@ if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
 endif()
 
 # Link this 'library' to use the warnings specified in CompilerWarnings.cmake
-add_library(PWARNINGS INTERFACE)
+add_library(${PWARNINGS} INTERFACE)
 
 # enable cache system
 include(cmake/Cache.cmake)
 
 # standard compiler warnings
 include(cmake/CompilerWarnings.cmake)
-set_project_warnings(PWARNINGS)
+set_project_warnings(${PWARNINGS})
 
 # sanitizer options if supported by compiler
 include(cmake/Sanitizers.cmake)
-enable_sanitizers(POPTIONS)
+enable_sanitizers(${POPTIONS})
 
 # enable doxygen
 include(cmake/Doxygen.cmake)
@@ -66,7 +66,7 @@ if(ENABLE_FUZZING)
 endif()
 
 add_library(${SRC_LIBRARY})
-add_library(${SRC_LIBRARY}::${SRC_LIBRARY} ALIAS ${SRC_LIBRARY})
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${SRC_LIBRARY})
 
 find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
