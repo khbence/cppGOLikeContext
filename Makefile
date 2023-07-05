@@ -28,4 +28,3 @@ packageModule: installAndGenerateStub
 
 publishPackage:
 	twine upload --repository-url https://pkgs.dev.azure.com/${org}/_packaging/python-feed/pypi/upload/ dist/context-$$(cat version.txt)-cp311-cp311-linux_x86_64.whl --verbose
-
