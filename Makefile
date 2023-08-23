@@ -23,6 +23,7 @@ installModule: installAndGenerateStub
 
 packageModule: installAndGenerateStub
 	cp stubs/context-stubs/context/__init__.pyi .
+	cp stubs/context-stubs/context/__init__.pyi src
 	python setup.py bdist_wheel
 	rm -r stubs
 
