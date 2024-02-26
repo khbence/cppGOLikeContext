@@ -29,3 +29,8 @@ packageModule: installAndGenerateStub
 
 publishPackage:
 	twine upload --repository-url https://pkgs.dev.azure.com/${org}/_packaging/python-feed/pypi/upload/ dist/context-$$(cat version.txt)-cp311-cp311-linux_x86_64.whl --verbose
+
+uploadPackage:
+	docker build ${CURDIR} -f Dockerfile.package -t context
+	docker run --rm -it context --name=context --version=2.0.0 --description="Golang like context library"
+	docker image rm context

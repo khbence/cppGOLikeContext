@@ -5,11 +5,11 @@ project(context CXX)
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(SRC_LIBRARY "contextLib")
+set(SRC_LIBRARY "context")
 set(MAIN_BINARY "contextMain")
 set(TEST_BINARY "testContext")
 set(PWARNINGS "project_warnings_${PROJECT_NAME}")
@@ -65,8 +65,14 @@ if(ENABLE_FUZZING)
     add_subdirectory(fuzz_test)
 endif()
 
-add_library(${SRC_LIBRARY})
+add_library(${SRC_LIBRARY} STATIC)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${SRC_LIBRARY})
+
+target_include_directories(${SRC_LIBRARY}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
 find_package(Threads REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -84,8 +90,53 @@ if(ENABLE_LTO)
   set_target_properties(${SRC_LIBRARY} PROPERTIES INTERPROCEDURAL_OPTIMIZATION TRUE)
 endif()
 
+set_property(TARGET ${SRC_LIBRARY} PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 option(BUILD_PY_MODULE "Build Python module" OFF)
 include(src/CMakeLists.txt)
+
+set(CPACK_PACKAGE_VERSION_MAJOR "2")
+set(CPACK_PACKAGE_VERSION_MINOR "0")
+set(CPACK_PACKAGE_VERSION_PATCH "0")
+
+# ...
+
+# Debug output for includes installation
+if(NOT TARGET_INCLUDES)
+    message("No includes to install")
+else()
+    message("Installing includes")
+endif()
+
+install(
+    TARGETS
+        ${SRC_LIBRARY}
+        project_options_context
+        project_warnings_context
+    EXPORT ${SRC_LIBRARY}Config
+        ARCHIVE
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT lib
+        RUNTIME
+            DESTINATION ${CMAKE_INSTALL_BINDIR}
+            COMPONENT bin
+        LIBRARY
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            COMPONENT lib
+        INCLUDES
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/include
+            COMPONENT lib
+)
+
+install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_LIBDIR}/include)
+
+
+install(EXPORT ${SRC_LIBRARY}Config
+    NAMESPACE "${SRC_LIBRARY}::"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${SRC_LIBRARY}
+)
+
+include(CMakeCPack.cmake)
 
 if(ENABLE_TESTING)
     enable_testing()

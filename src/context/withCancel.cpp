@@ -23,7 +23,7 @@ std::optional<std::string> WithCancel::err() const {
         if (error) { return std::string(error->what()); }
     }
     if (parent) { return parent->err(); }
-    return nullptr;
+    return {};
 }
 
 void WithCancel::cancel() { cancelWithError(std::make_unique<Cancelled>()); }
