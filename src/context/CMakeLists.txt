@@ -8,4 +8,8 @@ target_sources(
           ${CMAKE_CURRENT_LIST_DIR}/withDeadline.cpp
           ${CMAKE_CURRENT_LIST_DIR}/withValue.cpp)
 
-target_include_directories(${SRC_LIBRARY} PUBLIC include/context)
+target_include_directories(${SRC_LIBRARY}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include/context>
+    $<INSTALL_INTERFACE:include/context>
+)
