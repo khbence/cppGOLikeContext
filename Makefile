@@ -32,5 +32,5 @@ publishPackage:
 
 uploadPackage:
 	docker build ${CURDIR} -f Dockerfile.package -t context
-	docker run --rm -it context --name=context --version=2.0.0 --description="Golang like context library"
+	docker run --rm -it context --name=context --version=2.0.2 --description="Golang like context library"
 	docker image rm context

@@ -1,0 +1,21 @@
+FROM cytoacrdevelopment.azurecr.io/development:cpp as builder
+
+RUN mkdir -p /workdir
+WORKDIR /workdir
+COPY cmake /workdir/cmake
+COPY src /workdir/src
+COPY include /workdir/include
+COPY CMakeCPack.cmake /workdir
+COPY CMakeLists.txt /workdir
+
+RUN mkdir -p /workdir/build
+RUN cmake -S /workdir -B /workdir/build -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTING=OFF -DENABLE_UNITY=ON -DENABLE_LTO=ON
+# RUN cmake --build /workdir/build
+RUN cmake --build build --target package
+
+FROM cytoacrdevelopment.azurecr.io/devops:artifact as uploader
+
+RUN mkdir -p /packagedir
+COPY --from=builder /workdir/build/*.deb /packagedir
+
+ENTRYPOINT [ "az", "artifacts", "universal", "publish", "--organization=https://dev.azure.com/cytocast", "--project=devPublic", "--scope=project", "--feed=protocols-cpp", "--path=/packagedir" ]

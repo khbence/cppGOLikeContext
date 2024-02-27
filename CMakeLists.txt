@@ -97,7 +97,7 @@ include(src/CMakeLists.txt)
 
 set(CPACK_PACKAGE_VERSION_MAJOR "2")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "0")
+set(CPACK_PACKAGE_VERSION_PATCH "2")
 
 # ...
 
@@ -123,12 +123,9 @@ install(
         LIBRARY
             DESTINATION ${CMAKE_INSTALL_LIBDIR}
             COMPONENT lib
-        INCLUDES
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/include
-            COMPONENT lib
 )
 
-install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_LIBDIR}/include)
+install(DIRECTORY include/ DESTINATION include)
 
 
 install(EXPORT ${SRC_LIBRARY}Config
